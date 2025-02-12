@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url : jdbc:postgresql://localhost:5433/Ecommerce
+    username : postgres
+    password : Crash_bandicoot2
+    driver-class-name : org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database: postgresql
+    show-sql: True
+
