@@ -14,9 +14,9 @@ import java.util.List;
 @SuperBuilder
 @Entity
 @Table
-public class Customer extends Users{
-    double money;
+public class Customer extends User{
+    private double money;
 
     @OneToMany(mappedBy ="customer" )
-    List<PastOrder> orders;
+    private List<PastOrder> orders;
 }

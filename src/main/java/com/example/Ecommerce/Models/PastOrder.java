@@ -19,20 +19,20 @@ public class PastOrder {
     @Id
     @SequenceGenerator(name = "OrderId",initialValue = 1,allocationSize = 1)
     @GeneratedValue(generator = "OrderId",strategy = GenerationType.SEQUENCE)
-    Long Id;
-    LocalDate orderDate;
-    int totalAmount;
-    double totalPrice;
-    String  paymentMethod;
-    String State;
+    private Long Id;
+    private LocalDate orderDate;
+    private int totalAmount;
+    private double totalPrice;
+    private String  paymentMethod;
+    private String State;
 
     @ManyToMany(cascade = CascadeType.ALL)
             @JoinTable(name = "OrderProducts",joinColumns =
                     @JoinColumn(name = "ProductId"),inverseJoinColumns = {@JoinColumn(name = "PastOrderId")}
             )
-    List<Product> products;
+    private List<Product> products;
 
     @ManyToOne
     @JoinColumn(name = "Cust_id")
-    Customer customer;
+    private Customer customer;
 }

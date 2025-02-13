@@ -17,10 +17,10 @@ import java.util.List;
 @Entity
 @Table
 
-public class Seller extends Users {
+public class Seller extends User {
 
-    double rating;
+    private double rating;
 
     @ManyToMany(mappedBy = "suppliers")
-    List<Product> products;
+    private List<Product> products;
 }

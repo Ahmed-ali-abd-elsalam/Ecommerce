@@ -10,3 +10,4 @@ spring:
     database: postgresql
     show-sql: True
 
+

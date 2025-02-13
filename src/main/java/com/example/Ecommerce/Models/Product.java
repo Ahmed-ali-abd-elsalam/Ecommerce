@@ -18,23 +18,23 @@ public class Product {
     @Id
     @SequenceGenerator(initialValue = 1,allocationSize = 1,name = "ProductId")
     @GeneratedValue(generator = "ProductId",strategy = GenerationType.SEQUENCE)
-    Long Id;
-    String name;
-    String description;
-    String category;
-    String subCategory;
-    String brand;
-    double price;
-    int quantity;
+    private Long Id;
+    private String name;
+    private String description;
+    private String category;
+    private String subCategory;
+    private String brand;
+    private double price;
+    private int quantity;
 //    image url
-    String imageUrl;
+    private String imageUrl;
 
     @ManyToMany(cascade = CascadeType.ALL)
             @JoinTable(joinColumns = {@JoinColumn  (name = "ProductId")},inverseJoinColumns = {@JoinColumn(name = "SupplierId")})
-    List<Seller> suppliers;
+    private List<Seller> suppliers;
 
     @ManyToMany(mappedBy = "products")
-    List<PastOrder> orders;
+    private List<PastOrder> orders;
 
 
 }
