@@ -23,15 +23,18 @@ import java.util.List;
 public class User implements UserDetails {
 
     @Id
+    @SequenceGenerator(name = "UserId",allocationSize = 1,initialValue = 1)
+    @GeneratedValue(generator = "UserID",strategy = GenerationType.SEQUENCE)
     private Long ID;
     private String firstName;
     private String lastName;
     private String userName;
+    @Column(unique = true)
     private String email;
     private String password;
     private String phoneNumber;
-    private String Address;
-    private LocalDate DateOfBirth;
+    private String address;
+    private LocalDate dateOfBirth;
     @Enumerated(EnumType.STRING)
     private Role role;
 
