@@ -23,10 +23,10 @@ public class SecurityConfiguration {
         http
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/register","/authenticate")
-                .permitAll()
-                .anyRequest()
+                .requestMatchers("/Customers/**","/Suppliers/**","/Orders/**")
                 .authenticated()
+                .anyRequest()
+                .permitAll()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

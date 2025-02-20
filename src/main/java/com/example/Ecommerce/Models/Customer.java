@@ -1,7 +1,9 @@
 package com.example.Ecommerce.Models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -12,11 +14,14 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
+@Transactional
 @Entity
 @Table
 public class Customer extends User{
+
     private double money;
 
     @OneToMany(mappedBy ="customer" )
-    private List<PastOrder> orders;
+    @JsonIgnore
+    private List<Order> orders;
 }

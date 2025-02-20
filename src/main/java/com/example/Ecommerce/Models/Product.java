@@ -1,5 +1,6 @@
 package com.example.Ecommerce.Models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,12 +30,13 @@ public class Product {
 //    image url
     private String imageUrl;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-            @JoinTable(joinColumns = {@JoinColumn  (name = "ProductId")},inverseJoinColumns = {@JoinColumn(name = "SupplierId")})
-    private List<Seller> suppliers;
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JsonBackReference
+    @JoinColumn(name = "Supplier_ID")
+    private Supplier supplier;
 
     @ManyToMany(mappedBy = "products")
-    private List<PastOrder> orders;
+    private List<Order> orders;
 
 
 }

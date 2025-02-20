@@ -1,6 +1,8 @@
 package com.example.Ecommerce.Models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.*;
@@ -17,10 +19,11 @@ import java.util.List;
 @Entity
 @Table
 
-public class Seller extends User {
+public class Supplier extends User {
 
     private double rating;
 
-    @ManyToMany(mappedBy = "suppliers")
+    @ManyToMany(mappedBy = "supplier",fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Product> products;
 }

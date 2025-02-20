@@ -14,8 +14,8 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table
-public class PastOrder {
+@Table(name = "_Orders")
+public class Order {
     @Id
     @SequenceGenerator(name = "OrderId",initialValue = 1,allocationSize = 1)
     @GeneratedValue(generator = "OrderId",strategy = GenerationType.SEQUENCE)
