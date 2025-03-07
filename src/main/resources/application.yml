@@ -10,4 +10,6 @@ spring:
     database: postgresql
     show-sql: True
 
-
+  devtools:
+    restart:
+      enabled: True

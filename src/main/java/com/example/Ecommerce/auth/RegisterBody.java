@@ -19,5 +19,4 @@ public class RegisterBody {
     private String address;
     private LocalDate dateOfBirth;
     private Role role;
-
 }

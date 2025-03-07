@@ -1,0 +1,106 @@
+package com.example.Ecommerce.Service;
+
+import com.example.Ecommerce.Models.Cart;
+import com.example.Ecommerce.Models.Customer;
+import com.example.Ecommerce.Models.Product;
+import com.example.Ecommerce.Repository.CartRepository;
+import com.example.Ecommerce.Repository.ProductRepository;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+
+@Service
+@RequiredArgsConstructor
+public class ProductService {
+    private final ProductRepository productRepository;
+    private final CartRepository cartRepository;
+    private final CustomerService customerService;
+
+    public List<String> getProductsCategories() {
+        return productRepository.findAllDistinctCategories();
+    }
+
+    public List<Product> getProductsByCategory(String category,int pageNumber,int size) {
+        return  productRepository.findByCategory(category, PageRequest.of(pageNumber,size));
+    }
+
+    public List<Product> filterCategories(List<Product> products,List<String> Categories){
+        if(Categories.isEmpty()){
+            return products;
+        }else {
+            products = products.stream().filter(product -> Categories.contains(product.getCategory())).toList();
+            return products;
+        }
+    }
+    public List<Product> filterSubCategories(List<Product> products,List<String> subCategories){
+        if(subCategories.isEmpty()){
+            return products;
+        }else {
+            products = products.stream().filter(product -> subCategories.contains(product.getSubCategory())).toList();
+            return products;
+        }
+    }
+    public List<Product> filterBrand(List<Product> products,List<String> brands){
+        if(brands.isEmpty()){
+            return products;
+        }else {
+            products = products.stream().filter(product -> brands.contains(product.getBrand())).toList();
+            return products;
+        }
+    }
+    public List<Product> filterPrices(List<Product> products,List<String> prices){
+        if(prices.isEmpty()){
+            return products;
+        }else {
+            products = products.stream().filter(product ->
+                    {
+                        double price =product.getPrice();
+                        return (price<= Double.parseDouble(prices.get(1)) ||price>=Double.parseDouble(prices.get(0)));
+                    }
+                    ).toList();
+            return products;
+        }
+    }
+
+    public List<Product> getProductsByFilter(Map<String,List<String>>filter,String productName, int pageNumber, int size) {
+        List<Product> products = productRepository.findByNameContaining(productName);
+        products = filterCategories(products,filter.get("categories"));
+        products = filterSubCategories(products,filter.get("subCategories"));
+        products = filterBrand(products,filter.get("brands"));
+        products = filterPrices(products,filter.get("prices"));
+        return  products;
+    }
+
+    public Product getProductInfo(Long productID) {
+        return productRepository.findById(productID).orElseThrow(()->new NoSuchElementException("element with id "+productID+" Doesn't exist"));
+    }
+
+
+    @Transactional
+    public String addProductToCart(Long productID, int quantity, Authentication authentication) {
+        Customer customer = customerService.returnCustomer(authentication);
+        Cart cart = customer.getCart();
+        Product product = productRepository.findById(productID).orElseThrow(()->new NoSuchElementException("element with id "+productID+" Doesn't exist"));
+        product.setQuantity(quantity);
+        List<Product> productList = cart.getProducts();
+        Boolean edited  = false;
+        for(Product product1 : productList){
+            if(product1.getId().equals(productID)){
+                product1.setQuantity(quantity);
+                edited = true;
+            }
+        }
+        if (!edited){
+            productList.add(product);
+        }
+        cart.setProducts(productList);
+        cartRepository.save(cart);
+        return  "Product added";
+    }
+}

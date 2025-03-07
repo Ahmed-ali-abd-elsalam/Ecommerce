@@ -24,4 +24,8 @@ public class Customer extends User{
     @OneToMany(mappedBy ="customer" )
     @JsonIgnore
     private List<Order> orders;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "CartId")
+    private Cart cart;
 }
