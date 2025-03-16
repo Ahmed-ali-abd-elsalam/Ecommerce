@@ -2,7 +2,7 @@ package com.example.Ecommerce.Repository;
 
 import com.example.Ecommerce.Models.Product;
 import com.example.Ecommerce.Models.Supplier;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,6 +20,6 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
 
     List<Product> findByCategory(String category, Pageable page);
 
-    List<Product> findByNameContaining(String name);
+    List<Product> findByNameContaining(String name, Pageable page);
 
 }

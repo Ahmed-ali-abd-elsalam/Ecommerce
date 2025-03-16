@@ -22,6 +22,12 @@ public class ProductService {
     private final CartRepository cartRepository;
     private final CustomerService customerService;
 
+    @Transactional
+    public void editStock(long productID,int amount){
+        Product product = productRepository.findById(productID).orElseThrow(() -> new NoSuchElementException("product with ID"+productID+"Doesn't Exist"));
+        product.setQuantity(product.getQuantity()-amount);
+    }
+
     public List<String> getProductsCategories() {
         return productRepository.findAllDistinctCategories();
     }
@@ -69,7 +75,7 @@ public class ProductService {
     }
 
     public List<Product> getProductsByFilter(Map<String,List<String>>filter,String productName, int pageNumber, int size) {
-        List<Product> products = productRepository.findByNameContaining(productName);
+        List<Product> products = productRepository.findByNameContaining(productName,PageRequest.of(pageNumber,size));
         products = filterCategories(products,filter.get("categories"));
         products = filterSubCategories(products,filter.get("subCategories"));
         products = filterBrand(products,filter.get("brands"));
@@ -86,10 +92,11 @@ public class ProductService {
     public String addProductToCart(Long productID, int quantity, Authentication authentication) {
         Customer customer = customerService.returnCustomer(authentication);
         Cart cart = customer.getCart();
-        Product product = productRepository.findById(productID).orElseThrow(()->new NoSuchElementException("element with id "+productID+" Doesn't exist"));
+        Product product = productRepository.findById(productID)
+                .orElseThrow(()->new NoSuchElementException("element with id "+productID+" Doesn't exist"));
         product.setQuantity(quantity);
         List<Product> productList = cart.getProducts();
-        Boolean edited  = false;
+        boolean edited  = false;
         for(Product product1 : productList){
             if(product1.getId().equals(productID)){
                 product1.setQuantity(quantity);
@@ -100,7 +107,6 @@ public class ProductService {
             productList.add(product);
         }
         cart.setProducts(productList);
-        cartRepository.save(cart);
         return  "Product added";
     }
 }

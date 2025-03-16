@@ -21,10 +21,9 @@ public class Order {
     @GeneratedValue(generator = "OrderId",strategy = GenerationType.SEQUENCE)
     private Long Id;
     private LocalDate orderDate;
-    private int totalAmount;
-    private double totalPrice;
+    private Integer totalAmount;
+    private Double totalPrice;
     private String  paymentMethod;
-    private String State;
 
     @ManyToMany(cascade = CascadeType.ALL)
             @JoinTable(name = "OrderProducts",joinColumns =

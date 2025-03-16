@@ -1,7 +1,6 @@
 package com.example.Ecommerce.Service;
 
 import com.example.Ecommerce.Models.Customer;
-import com.example.Ecommerce.Models.Order;
 import com.example.Ecommerce.Repository.CustomerRepository;
 import com.example.Ecommerce.Repository.OrderRepository;
 import jakarta.transaction.Transactional;
@@ -10,16 +9,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
-    private final OrderRepository orderRepository;
 
     public Customer returnCustomer(Authentication authentication){
         String email = authentication.getName();
@@ -43,17 +39,4 @@ public class CustomerService {
         return "Done";
     }
 
-
-
-    public List<Order> getCustomerOrders(Authentication authentication) {
-        Customer customer = returnCustomer(authentication);
-        return customer.getOrders();
-    }
-
-
-    public Order getCustomerOrder(Authentication authentication,Long orderID) {
-        Customer customer = returnCustomer(authentication);
-        return  orderRepository.findByIdAndCustomer(orderID,customer).orElseThrow(()->new NoSuchElementException("Order with ID "+orderID + " doesn't belong to current user "));
-//        return orderRepository.findById(orderID).orElseThrow(()->new NoSuchElementException("Order with ID "+orderID + " Doesn't exist"));
-    }
 }
