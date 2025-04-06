@@ -21,7 +21,7 @@ import java.util.List;
 
 public class Supplier extends User {
 
-    private double rating;
+    private Double rating;
 
     @ManyToMany(mappedBy = "supplier",fetch = FetchType.LAZY)
     @JsonManagedReference

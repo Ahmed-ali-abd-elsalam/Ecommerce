@@ -1,6 +1,8 @@
 package com.example.Ecommerce.Controller;
 
 
+import com.example.Ecommerce.DTOS.CustomerRequestDto;
+import com.example.Ecommerce.DTOS.CustomerResponseDto;
 import com.example.Ecommerce.Models.Customer;
 
 import com.example.Ecommerce.Service.CustomerService;
@@ -18,12 +20,12 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @GetMapping
-    public Customer getCustomerInfo(Authentication authentication){
+    public CustomerResponseDto getCustomerInfo(Authentication authentication){
         return customerService.getCustomerInfo(authentication);
     }
 
     @PutMapping
-    public String editCustomerInfo(Authentication authentication,@RequestBody Customer customer){
+    public String editCustomerInfo(Authentication authentication,@RequestBody CustomerRequestDto customer){
         return customerService.editCustomerInfo(authentication,customer);
     }
 

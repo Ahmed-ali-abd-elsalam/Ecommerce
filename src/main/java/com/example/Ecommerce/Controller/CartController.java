@@ -1,8 +1,9 @@
 package com.example.Ecommerce.Controller;
 
+import com.example.Ecommerce.DTOS.ProductDto;
 import com.example.Ecommerce.Models.Cart;
 import com.example.Ecommerce.Models.Order;
-import com.example.Ecommerce.Models.Product;
+
 
 import com.example.Ecommerce.Service.CartService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class CartController {
     }
 
     @PutMapping(path = "/{CartID}")
-    public Cart editCartItems(Authentication authentication, @PathVariable Long CartID, Map<Long, Product> productMap){
+    public Cart editCartItems(Authentication authentication, @PathVariable Long CartID, Map<Long, ProductDto> productMap){
         return cartService.editCartItems(authentication,CartID,productMap);
     }
 

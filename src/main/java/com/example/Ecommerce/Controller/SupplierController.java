@@ -1,12 +1,13 @@
 package com.example.Ecommerce.Controller;
 
-import com.example.Ecommerce.Models.Product;
+import com.example.Ecommerce.DTOS.ProductDto;
+import com.example.Ecommerce.DTOS.ProductRequestDto;
+import com.example.Ecommerce.DTOS.SupplierRequestDto;
+import com.example.Ecommerce.DTOS.SupplierResponseDto;
 import com.example.Ecommerce.Models.Supplier;
-import com.example.Ecommerce.Repository.SupplierRepository;
 import com.example.Ecommerce.Service.SupplierService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,23 +17,23 @@ public class SupplierController {
     private  final SupplierService supplierService;
 
     @GetMapping
-    private Supplier getSupplierInfo(Authentication authentication){
+    private SupplierResponseDto getSupplierInfo(Authentication authentication){
         return supplierService.getSupplierInfo(authentication);
     }
 
     @PutMapping
-    private  String  editSupplierInfo(Authentication authentication, @RequestBody Supplier supplier){
+    private  String  editSupplierInfo(Authentication authentication, @RequestBody SupplierRequestDto supplier){
         return supplierService.editSupplierInfo(authentication,supplier);
     }
 
     @PostMapping(path ="/Products/newProduct")
-    private Product addNewProduct(Authentication authentication, @RequestBody Product product){
-        return  supplierService.addNewProduct(authentication,product);
+    private ProductDto addNewProduct(Authentication authentication, @RequestBody ProductRequestDto productRequestDto){
+        return  supplierService.addNewProduct(authentication,productRequestDto);
     }
 
     @PutMapping(path = "/Products/{productID}")
-    private String editProductInfo(Authentication authentication ,@PathVariable Long productID,@RequestBody Product product ){
-        return supplierService.editProductInfo(authentication,productID,product);
+    private String editProductInfo(Authentication authentication ,@PathVariable Long productID,@RequestBody ProductRequestDto productRequestDto ){
+        return supplierService.editProductInfo(authentication,productID,productRequestDto);
     }
 
 }

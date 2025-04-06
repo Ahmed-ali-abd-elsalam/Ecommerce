@@ -19,7 +19,7 @@ import java.util.List;
 @Table
 public class Customer extends User{
 
-    private double money;
+    private Double money;
 
     @OneToMany(mappedBy ="customer" )
     @JsonIgnore

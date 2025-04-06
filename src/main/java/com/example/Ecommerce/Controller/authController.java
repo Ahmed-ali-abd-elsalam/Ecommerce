@@ -1,5 +1,9 @@
-package com.example.Ecommerce.auth;
+package com.example.Ecommerce.Controller;
 
+import com.example.Ecommerce.Service.AuthService;
+import com.example.Ecommerce.auth.AuthenticateBody;
+import com.example.Ecommerce.auth.AuthenticationResponse;
+import com.example.Ecommerce.auth.RegisterBody;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

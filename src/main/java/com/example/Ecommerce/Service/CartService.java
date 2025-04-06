@@ -1,5 +1,7 @@
 package com.example.Ecommerce.Service;
 
+import com.example.Ecommerce.DTOS.ProductDto;
+import com.example.Ecommerce.Mappers.ProductMapper;
 import com.example.Ecommerce.Models.Cart;
 import com.example.Ecommerce.Models.Customer;
 import com.example.Ecommerce.Models.Order;
@@ -40,18 +42,20 @@ public class CartService {
     }
 
     @Transactional
-    public Cart editCartItems(Authentication authentication, Long cartID, Map<Long, Product> productMap) {
+    public Cart editCartItems(Authentication authentication, Long cartID, Map<Long, ProductDto> productDtoMap) {
         Cart cart = checkCart(authentication,cartID);
+        Map<Long,Product> productMap = Map.of();
         List<Product> productList = cart.getProducts();
         for(int i=0;i<productList.size();i++){
-            if(productMap.containsKey(productList.get(i).getId())){
+            if(productDtoMap.containsKey(productList.get(i).getId())){
                 Long Id = productList.get(i).getId();
-                Product oldProduct = productMap.get(Id);
+//                Product oldProduct = productMap.get(Id);
+                ProductDto oldProduct = productDtoMap.get(Id);
                 Product newProduct = productList.get(i);
-                int diff =  newProduct.getQuantity()-oldProduct.getQuantity();
+                int diff =  newProduct.getQuantity()-oldProduct.quantity();
                 cart.setTotalAmount(cart.getTotalAmount()+diff);
-                cart.setTotalPrice(cart.getTotalPrice()+diff*oldProduct.getPrice());
-                productList.set(i,productMap.get(Id));
+                cart.setTotalPrice(cart.getTotalPrice()+diff*oldProduct.price());
+                productList.set(i,ProductMapper.MapDtoToProduct(productDtoMap.get(Id)));
             }
         }
         cart.setProducts(productList);

@@ -1,4 +1,4 @@
-package com.example.Ecommerce.auth;
+package com.example.Ecommerce.Service;
 
 
 import com.example.Ecommerce.Models.*;
@@ -6,7 +6,9 @@ import com.example.Ecommerce.Repository.CartRepository;
 import com.example.Ecommerce.Repository.CustomerRepository;
 import com.example.Ecommerce.Repository.SupplierRepository;
 import com.example.Ecommerce.Repository.UserRepository;
-import com.example.Ecommerce.config.JwtService;
+import com.example.Ecommerce.auth.AuthenticateBody;
+import com.example.Ecommerce.auth.AuthenticationResponse;
+import com.example.Ecommerce.auth.RegisterBody;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

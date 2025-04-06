@@ -1,9 +1,10 @@
 package com.example.Ecommerce.Service;
 
+import com.example.Ecommerce.DTOS.ProductDto;
+import com.example.Ecommerce.Mappers.ProductMapper;
 import com.example.Ecommerce.Models.Cart;
 import com.example.Ecommerce.Models.Customer;
 import com.example.Ecommerce.Models.Product;
-import com.example.Ecommerce.Repository.CartRepository;
 import com.example.Ecommerce.Repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -15,16 +16,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+
 @Service
 @RequiredArgsConstructor
 public class ProductService {
     private final ProductRepository productRepository;
-    private final CartRepository cartRepository;
     private final CustomerService customerService;
 
     @Transactional
     public void editStock(long productID,int amount){
-        Product product = productRepository.findById(productID).orElseThrow(() -> new NoSuchElementException("product with ID"+productID+"Doesn't Exist"));
+        Product product = productRepository.findById(productID)
+                .orElseThrow(() -> new NoSuchElementException("product with ID"+productID+"Doesn't Exist"));
         product.setQuantity(product.getQuantity()-amount);
     }
 
@@ -32,8 +34,9 @@ public class ProductService {
         return productRepository.findAllDistinctCategories();
     }
 
-    public List<Product> getProductsByCategory(String category,int pageNumber,int size) {
-        return  productRepository.findByCategory(category, PageRequest.of(pageNumber,size));
+    public List<ProductDto> getProductsByCategory(String category, int pageNumber, int size) {
+        List<Product> products =  productRepository.findByCategory(category, PageRequest.of(pageNumber,size));
+        return products.stream().map(product -> ProductMapper.MapToDto(product) ).toList();
     }
 
     public List<Product> filterCategories(List<Product> products,List<String> Categories){
@@ -74,17 +77,19 @@ public class ProductService {
         }
     }
 
-    public List<Product> getProductsByFilter(Map<String,List<String>>filter,String productName, int pageNumber, int size) {
+    public List<ProductDto> getProductsByFilter(Map<String,List<String>>filter,String productName, int pageNumber, int size) {
         List<Product> products = productRepository.findByNameContaining(productName,PageRequest.of(pageNumber,size));
         products = filterCategories(products,filter.get("categories"));
         products = filterSubCategories(products,filter.get("subCategories"));
         products = filterBrand(products,filter.get("brands"));
         products = filterPrices(products,filter.get("prices"));
-        return  products;
+        List<ProductDto> ProductsResponse =products.stream().map(product -> ProductMapper.MapToDto(product) ).toList();
+        return  ProductsResponse;
     }
 
-    public Product getProductInfo(Long productID) {
-        return productRepository.findById(productID).orElseThrow(()->new NoSuchElementException("element with id "+productID+" Doesn't exist"));
+    public ProductDto getProductInfo(Long productID) {
+        Product product = productRepository.findById(productID).orElseThrow(()->new NoSuchElementException("element with id "+productID+" Doesn't exist"));
+        return ProductMapper.MapToDto(product);
     }
 
 

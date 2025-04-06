@@ -28,6 +28,8 @@ public class Cart {
     @JoinTable(name = "CartProducts",joinColumns =
                 @JoinColumn(name = "ProductId"),inverseJoinColumns = {@JoinColumn(name = "CartId")}
                 )
+
+//    possible issue in here
     private List<Product> products;
 
     @OneToOne(mappedBy = "cart")

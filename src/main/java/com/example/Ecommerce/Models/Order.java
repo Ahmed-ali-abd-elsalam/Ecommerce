@@ -29,6 +29,7 @@ public class Order {
             @JoinTable(name = "OrderProducts",joinColumns =
                     @JoinColumn(name = "ProductId"),inverseJoinColumns = {@JoinColumn(name = "PastOrderId")}
             )
+//    possible issue in here
     private List<Product> products;
 
     @ManyToOne
