@@ -3,7 +3,6 @@ package com.example.Ecommerce.Controller;
 
 import com.example.Ecommerce.DTOS.CustomerRequestDto;
 import com.example.Ecommerce.DTOS.CustomerResponseDto;
-import com.example.Ecommerce.Models.Customer;
 
 import com.example.Ecommerce.Service.CustomerService;
 import lombok.RequiredArgsConstructor;

@@ -7,9 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class EcommerceApplication {
 
 //	TODO
-//		DTO
+//		DTO (Order,Cart) -------->Done
 //		Validation of bodies
-//		exception handling across project
+//		global exception filter across project
 //		Testing via postman
 	public static void main(String[] args) {
 		SpringApplication.run(EcommerceApplication.class, args);

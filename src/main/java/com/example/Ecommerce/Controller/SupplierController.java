@@ -4,7 +4,6 @@ import com.example.Ecommerce.DTOS.ProductDto;
 import com.example.Ecommerce.DTOS.ProductRequestDto;
 import com.example.Ecommerce.DTOS.SupplierRequestDto;
 import com.example.Ecommerce.DTOS.SupplierResponseDto;
-import com.example.Ecommerce.Models.Supplier;
 import com.example.Ecommerce.Service.SupplierService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;

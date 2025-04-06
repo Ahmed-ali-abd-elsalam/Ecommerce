@@ -1,6 +1,9 @@
 package com.example.Ecommerce.Service;
 
+import com.example.Ecommerce.DTOS.CartDto;
+import com.example.Ecommerce.DTOS.OrderDto;
 import com.example.Ecommerce.DTOS.ProductDto;
+import com.example.Ecommerce.Mappers.CartMapper;
 import com.example.Ecommerce.Mappers.ProductMapper;
 import com.example.Ecommerce.Models.Cart;
 import com.example.Ecommerce.Models.Customer;
@@ -36,19 +39,19 @@ public class CartService {
                 .orElseThrow(() -> new NoSuchElementException("no cart In Repo"));
     }
 
-    public Cart getCurrentCart(Authentication authentication) {
+    public CartDto getCurrentCart(Authentication authentication) {
         Customer customer = customerService.returnCustomer(authentication);
-        return customer.getCart();
+        return CartMapper.CartToDtoMapper(customer.getCart());
     }
 
     @Transactional
-    public Cart editCartItems(Authentication authentication, Long cartID, Map<Long, ProductDto> productDtoMap) {
+    public CartDto editCartItems(Authentication authentication, Long cartID, Map<Long, ProductDto> productDtoMap) {
         Cart cart = checkCart(authentication,cartID);
-        Map<Long,Product> productMap = Map.of();
+//        Map<Long,Product> productMap = Map.of();
         List<Product> productList = cart.getProducts();
         for(int i=0;i<productList.size();i++){
-            if(productDtoMap.containsKey(productList.get(i).getId())){
                 Long Id = productList.get(i).getId();
+            if(productDtoMap.containsKey(Id)){
 //                Product oldProduct = productMap.get(Id);
                 ProductDto oldProduct = productDtoMap.get(Id);
                 Product newProduct = productList.get(i);
@@ -59,15 +62,15 @@ public class CartService {
             }
         }
         cart.setProducts(productList);
-        return cart;
+        return CartMapper.CartToDtoMapper(cart);
     }
 
     @Transactional
-    public Order finalizePurchase(Authentication authentication, Long cartID, String paymentMethod) {
+    public OrderDto finalizePurchase(Authentication authentication, Long cartID, String paymentMethod) {
 //        check cart and customer then pass them to order to finalize
         Customer customer = customerService.returnCustomer(authentication);
         Cart cart = checkCart(authentication,cartID);
-        Order order = orderService.SaveOrder(customer.getID(),cart,paymentMethod);
+        OrderDto orderdto = orderService.SaveOrder(customer.getID(),cart,paymentMethod);
         List<Product> products = cart.getProducts();
         for (Product product : products) {
             Long productID = product.getId();
@@ -78,6 +81,7 @@ public class CartService {
         cart.setProducts(products);
         cart.setTotalPrice(0.0);
         cart.setTotalAmount(0);
-        return order;
+//        return orderDto
+        return orderdto;
     }
 }

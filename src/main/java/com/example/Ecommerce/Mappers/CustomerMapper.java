@@ -32,7 +32,7 @@ public class CustomerMapper {
                 .dateOfBirth(customerRequestDto.dateOfBirth())
                 .role(customerRequestDto.role())
                 .money(customerRequestDto.money())
-                .cart(customerRequestDto.cart())
+                .cart(CartMapper.DtoToCartMapper(customerRequestDto.cart()))
                 .orders(customerRequestDto.orders())
                 .build();
     }

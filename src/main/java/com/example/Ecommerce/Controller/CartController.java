@@ -1,7 +1,8 @@
 package com.example.Ecommerce.Controller;
 
+import com.example.Ecommerce.DTOS.CartDto;
+import com.example.Ecommerce.DTOS.OrderDto;
 import com.example.Ecommerce.DTOS.ProductDto;
-import com.example.Ecommerce.Models.Cart;
 import com.example.Ecommerce.Models.Order;
 
 
@@ -20,17 +21,17 @@ public class CartController {
 
     private final CartService cartService;
     @GetMapping
-    public Cart GetCurrentCart(Authentication authentication){
+    public CartDto GetCurrentCart(Authentication authentication){
         return cartService.getCurrentCart(authentication);
     }
 
     @PutMapping(path = "/{CartID}")
-    public Cart editCartItems(Authentication authentication, @PathVariable Long CartID, Map<Long, ProductDto> productMap){
+    public CartDto editCartItems(Authentication authentication, @PathVariable Long CartID, Map<Long, ProductDto> productMap){
         return cartService.editCartItems(authentication,CartID,productMap);
     }
 
     @PostMapping(path = "/{CartID}/Finalize")
-    public Order finalizePurchase(Authentication authentication,@PathVariable Long CartID,String paymentMethod){
+    public OrderDto finalizePurchase(Authentication authentication, @PathVariable Long CartID, String paymentMethod){
         return cartService.finalizePurchase(authentication,CartID,paymentMethod);
     }
 }

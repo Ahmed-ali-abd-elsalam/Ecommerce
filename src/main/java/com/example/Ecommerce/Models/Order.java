@@ -26,8 +26,9 @@ public class Order {
     private String  paymentMethod;
 
     @ManyToMany(cascade = CascadeType.ALL)
-            @JoinTable(name = "OrderProducts",joinColumns =
-                    @JoinColumn(name = "ProductId"),inverseJoinColumns = {@JoinColumn(name = "PastOrderId")}
+            @JoinTable(name = "OrderProducts",
+                    joinColumns = @JoinColumn(name = "PastOrderId"),
+                    inverseJoinColumns = @JoinColumn(name = "ProductId")
             )
 //    possible issue in here
     private List<Product> products;

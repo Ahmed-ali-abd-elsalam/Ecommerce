@@ -1,5 +1,6 @@
 package com.example.Ecommerce.Controller;
 
+import com.example.Ecommerce.DTOS.OrderDto;
 import com.example.Ecommerce.Models.Order;
 import com.example.Ecommerce.Service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -19,11 +20,11 @@ public class OrderController {
     private final OrderService orderService;
 
     @GetMapping
-    public List<Order> getCustomerOrders(Authentication authentication){
+    public List<OrderDto> getCustomerOrders(Authentication authentication){
         return orderService.getCustomerOrders(authentication);
     }
     @GetMapping(path = "/{OrderID}")
-    public Order getCustomerOrder(@PathVariable Long OrderID, Authentication authentication){
+    public OrderDto getCustomerOrder(@PathVariable Long OrderID, Authentication authentication){
         return orderService.getCustomerOrder(authentication,OrderID);
     }
 }

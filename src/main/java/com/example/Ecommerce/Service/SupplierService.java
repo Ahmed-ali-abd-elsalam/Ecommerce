@@ -74,6 +74,9 @@ public class SupplierService {
     public String editProductInfo(Authentication authentication, Long productID, ProductRequestDto product) {
         Supplier supplier = returnCurrentSupplier(authentication);
         Product product1 = productRepository.findById(productID).orElseThrow(()->new NoSuchElementException("product with ID "+productID+" name "+product.name()+" Doesn't exist"));
+        if(!product1.getSupplier().equals((supplier))){
+            return "You cant edit this product its not yours";
+        }
         product1.setName(product.name());
         product1.setDescription(product.description());
         product1.setCategory(product.category());

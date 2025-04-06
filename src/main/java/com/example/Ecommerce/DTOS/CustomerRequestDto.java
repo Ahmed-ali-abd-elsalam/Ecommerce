@@ -30,7 +30,7 @@ public record CustomerRequestDto(
         Role role,
         @PositiveOrZero
         Double money,
-        Cart cart,
+        CartDto cart,
         List<Order> orders
 ) {
 }

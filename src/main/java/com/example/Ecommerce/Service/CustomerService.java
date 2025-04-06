@@ -22,7 +22,7 @@ public class CustomerService {
 
     public Customer returnCustomer(Authentication authentication){
         String email = authentication.getName();
-        return  customerRepository.findByEmail(email).orElseThrow(()->new UsernameNotFoundException("Email "+ email+ " Not in database"));
+        return  customerRepository.findByEmail(email).orElseThrow(()->new UsernameNotFoundException("Email "+ email+ " Not a customer in database"));
     }
 
     public CustomerResponseDto getCustomerInfo(Authentication authentication) {

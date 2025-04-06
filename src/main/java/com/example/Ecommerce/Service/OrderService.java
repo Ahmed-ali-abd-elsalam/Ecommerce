@@ -1,6 +1,8 @@
 package com.example.Ecommerce.Service;
 
 
+import com.example.Ecommerce.DTOS.OrderDto;
+import com.example.Ecommerce.Mappers.OrderMapper;
 import com.example.Ecommerce.Models.Cart;
 import com.example.Ecommerce.Models.Customer;
 import com.example.Ecommerce.Models.Order;
@@ -22,7 +24,7 @@ public class OrderService {
     private final CustomerService customerService;
     private final OrderRepository orderRepository;
 
-    public Order SaveOrder(Long customerId, Cart cart,String paymentMethod) {
+    public OrderDto SaveOrder(Long customerId, Cart cart, String paymentMethod) {
         Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new NoSuchElementException("no customer with id"+customerId));
         Order order = Order.builder()
                 .orderDate(LocalDate.now())
@@ -32,18 +34,19 @@ public class OrderService {
                 .paymentMethod(paymentMethod)
                 .build();
         orderRepository.save(order);
-        return order;
+        return OrderMapper.OrderToDtoMapper(order);
     }
 
-    public List<Order> getCustomerOrders(Authentication authentication) {
+    public List<OrderDto> getCustomerOrders(Authentication authentication) {
         Customer customer = customerService.returnCustomer(authentication);
-        return customer.getOrders();
+        return customer.getOrders().stream().map(OrderMapper::OrderToDtoMapper).toList();
     }
 
 
-    public Order getCustomerOrder(Authentication authentication,Long orderID) {
+    public OrderDto getCustomerOrder(Authentication authentication,Long orderID) {
         Customer customer = customerService.returnCustomer(authentication);
-        return  orderRepository.findByIdAndCustomer(orderID,customer).orElseThrow(()->new NoSuchElementException("Order with ID "+orderID + " doesn't belong to current user "));
+        Order order =  orderRepository.findByIdAndCustomer(orderID,customer).orElseThrow(()->new NoSuchElementException("Order with ID "+orderID + " doesn't belong to current user "));
+        return OrderMapper.OrderToDtoMapper(order);
     }
 
 

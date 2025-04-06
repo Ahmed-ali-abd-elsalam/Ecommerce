@@ -1,7 +1,6 @@
 package com.example.Ecommerce.DTOS;
 
 
-import com.example.Ecommerce.Models.Product;
 import com.example.Ecommerce.Models.Role;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
