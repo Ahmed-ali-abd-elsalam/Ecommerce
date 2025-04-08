@@ -4,11 +4,7 @@ import com.example.Ecommerce.DTOS.CartDto;
 import com.example.Ecommerce.DTOS.OrderDto;
 import com.example.Ecommerce.DTOS.ProductDto;
 import com.example.Ecommerce.Mappers.CartMapper;
-import com.example.Ecommerce.Mappers.ProductMapper;
-import com.example.Ecommerce.Models.Cart;
-import com.example.Ecommerce.Models.Customer;
-import com.example.Ecommerce.Models.Order;
-import com.example.Ecommerce.Models.Product;
+import com.example.Ecommerce.Models.*;
 import com.example.Ecommerce.Repository.CartRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -47,21 +43,21 @@ public class CartService {
     @Transactional
     public CartDto editCartItems(Authentication authentication, Long cartID, Map<Long, ProductDto> productDtoMap) {
         Cart cart = checkCart(authentication,cartID);
-//        Map<Long,Product> productMap = Map.of();
-        List<Product> productList = cart.getProducts();
-        for(int i=0;i<productList.size();i++){
-                Long Id = productList.get(i).getId();
+        List<CartProducts> cartProductsList = cart.getCartProducts();
+        for(int i = 0; i< cartProductsList.size(); i++){
+                Long Id = cartProductsList.get(i).getProduct().getId();
+                CartProducts cartProducts = cartProductsList.get(i);
             if(productDtoMap.containsKey(Id)){
-//                Product oldProduct = productMap.get(Id);
-                ProductDto oldProduct = productDtoMap.get(Id);
-                Product newProduct = productList.get(i);
-                int diff =  newProduct.getQuantity()-oldProduct.quantity();
+                ProductDto updated = productDtoMap.get(Id);
+                int diff =  updated.quantity()- cartProductsList.get(i).getQuantity();
                 cart.setTotalAmount(cart.getTotalAmount()+diff);
-                cart.setTotalPrice(cart.getTotalPrice()+diff*oldProduct.price());
-                productList.set(i,ProductMapper.MapDtoToProduct(productDtoMap.get(Id)));
+                cart.setTotalPrice(cart.getTotalPrice()+diff*updated.price());
+                cartProducts.setQuantity(updated.quantity());
+                cartProducts.setPrice(updated.price());
+                cartProductsList.set(i,cartProducts);
             }
         }
-        cart.setProducts(productList);
+        cart.setCartProducts(cartProductsList);
         return CartMapper.CartToDtoMapper(cart);
     }
 
@@ -71,14 +67,17 @@ public class CartService {
         Customer customer = customerService.returnCustomer(authentication);
         Cart cart = checkCart(authentication,cartID);
         OrderDto orderdto = orderService.SaveOrder(customer.getID(),cart,paymentMethod);
-        List<Product> products = cart.getProducts();
-        for (Product product : products) {
-            Long productID = product.getId();
-            int amount = product.getQuantity();
+//        List<Product> products = cart.getProducts();
+        List<CartProducts> cartProductsList = cart.getCartProducts();
+
+        for (CartProducts cartProduct : cartProductsList) {
+            Long productID = cartProduct.getProduct().getId();
+            int amount = cartProduct.getQuantity();
             productService.editStock(productID, amount);
         }
-        products.clear();
-        cart.setProducts(products);
+        cartProductsList.clear();
+//        need to check if cart is cleared and cartproducts is cleared with finalize or not
+        cart.setCartProducts(cartProductsList);
         cart.setTotalPrice(0.0);
         cart.setTotalAmount(0);
 //        return orderDto

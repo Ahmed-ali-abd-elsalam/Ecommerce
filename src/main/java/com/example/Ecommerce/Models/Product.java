@@ -35,10 +35,14 @@ public class Product {
     @JoinColumn(name = "Supplier_ID")
     private Supplier supplier;
 
-    @ManyToMany(mappedBy = "products")
-    private List<Order> orders;
-    @ManyToMany(mappedBy = "products")
-    private List<Cart> carts;
+//    @ManyToMany(mappedBy = "products")
+//    private List<Order> orders;
+//    @ManyToMany(mappedBy = "products")
+//    private List<Cart> carts;
 
+    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
+    List<OrderProducts> Orderproducts;
+    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
+    List<CartProducts> cartProducts;
 
 }

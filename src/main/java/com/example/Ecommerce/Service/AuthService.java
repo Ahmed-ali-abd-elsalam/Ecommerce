@@ -119,7 +119,7 @@ public class AuthService {
                 .customer(customer)
                 .totalAmount(0)
                 .totalPrice(0.0)
-                .products(List.of())
+                .cartProducts(List.of())
                 .build();
 
         customer.setCart(cart);

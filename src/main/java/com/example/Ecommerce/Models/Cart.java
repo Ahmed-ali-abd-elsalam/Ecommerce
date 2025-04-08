@@ -1,9 +1,7 @@
 package com.example.Ecommerce.Models;
 
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import jakarta.transaction.Transactional;
 import lombok.*;
 
 import java.util.List;
@@ -12,7 +10,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Transactional
 @Entity
 @Table
 public class Cart {
@@ -23,14 +20,17 @@ public class Cart {
     private Long Id;
     private Integer totalAmount;
     private Double totalPrice;
-    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JsonManagedReference
-    @JoinTable(name = "CartProducts",joinColumns =
-                @JoinColumn(name = "ProductId"),inverseJoinColumns = {@JoinColumn(name = "CartId")}
-                )
+//    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+//    @JsonManagedReference
+//    @JoinTable(name = "CartProducts",joinColumns =
+//                @JoinColumn(name = "ProductId"),inverseJoinColumns = {@JoinColumn(name = "CartId")}
+//                )
+//
+////    possible issue in here
+//    private List<Product> products;
 
-//    possible issue in here
-    private List<Product> products;
+    @OneToMany(mappedBy = "cart",cascade = CascadeType.ALL)
+    List<CartProducts> cartProducts;
 
     @OneToOne(mappedBy = "cart")
     private Customer customer;

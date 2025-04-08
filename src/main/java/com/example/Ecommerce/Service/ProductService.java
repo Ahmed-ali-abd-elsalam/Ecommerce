@@ -3,8 +3,10 @@ package com.example.Ecommerce.Service;
 import com.example.Ecommerce.DTOS.ProductDto;
 import com.example.Ecommerce.Mappers.ProductMapper;
 import com.example.Ecommerce.Models.Cart;
+import com.example.Ecommerce.Models.CartProducts;
 import com.example.Ecommerce.Models.Customer;
 import com.example.Ecommerce.Models.Product;
+import com.example.Ecommerce.Repository.CartProductsRepository;
 import com.example.Ecommerce.Repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import java.util.NoSuchElementException;
 public class ProductService {
     private final ProductRepository productRepository;
     private final CustomerService customerService;
+    private final CartProductsRepository cartProductsRepository;
 
     @Transactional
     public void editStock(long productID,int amount){
@@ -93,25 +96,19 @@ public class ProductService {
     }
 
 
-    @Transactional
+
     public String addProductToCart(Long productID, int quantity, Authentication authentication) {
         Customer customer = customerService.returnCustomer(authentication);
         Cart cart = customer.getCart();
         Product product = productRepository.findById(productID)
                 .orElseThrow(()->new NoSuchElementException("element with id "+productID+" Doesn't exist"));
-        product.setQuantity(quantity);
-        List<Product> productList = cart.getProducts();
-        boolean edited  = false;
-        for(Product product1 : productList){
-            if(product1.getId().equals(productID)){
-                product1.setQuantity(quantity);
-                edited = true;
-            }
-        }
-        if (!edited){
-            productList.add(product);
-        }
-        cart.setProducts(productList);
+        CartProducts cartProducts = CartProducts.builder()
+                .cart(cart)
+                .product(product)
+                .quantity(quantity)
+                .price(product.getPrice()*quantity)
+                .build();
+        cartProductsRepository.save(cartProducts);
         return  "Product added";
     }
 }
