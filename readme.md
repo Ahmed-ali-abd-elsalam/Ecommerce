@@ -40,40 +40,40 @@ POST   /authenticate     # User authentication and JWT token generation
 ![img_3.png](img_3.png)
 ### Supplier Controller
 ```http
-   GET    /suppliers                            # Get info about the currently logged-in supplier  
-   PUT    /supplier                             # Edit supplier information  
-   PUT    /supplier/products/{productID}        # Edit a product's details  
-   POST   /supplier/products/{productID}        # Add a new product
+GET    /suppliers                            # Get info about the currently logged-in supplier  
+PUT    /supplier                             # Edit supplier information  
+PUT    /supplier/products/{productID}        # Edit a product's details  
+POST   /supplier/products/{productID}        # Add a new product
 ```
 ![img.png](img.png)
 ### Customer Controller
 ```http
-    GET    /customers                # Get info about the currently logged-in customer  
-    PUT    /customers                # Edit customer information
+GET    /customers                # Get info about the currently logged-in customer  
+PUT    /customers                # Edit customer information
 ```
 ![img_4.png](img_4.png)
 ### Order Controller
 ```http
-    GET    /orders                  # Get all past orders by the customer  
-    GET    /orders/{orderID}        # Get details about a specific order
+GET    /orders                  # Get all past orders by the customer  
+GET    /orders/{orderID}        # Get details about a specific order
 ```
 
 ![img_5.png](img_5.png)
 ### Cart Controller
 ```http
-    GET    /cart                                # View items in the customer's cart  
-    PUT    /cart/{cartID}                       # Edit items in the cart  
-    POST   /cart/{cartID}/finalize              # Finalize purchase and create order
+GET    /cart                                # View items in the customer's cart  
+PUT    /cart/{cartID}                       # Edit items in the cart  
+POST   /cart/{cartID}/finalize              # Finalize purchase and create order
 ```
 
 ![img_6.png](img_6.png)
 ### Product Controller
 ```http
-    GET    /products/{productID}                      # Get product details  
-    GET    /products/categories                       # List all product categories  
-    GET    /products/categories/{category}            # List products in a category  
-    POST   /products/{productID}/add                  # Add product to customer's cart  
-    POST   /products/filtered                         # Get products matching filter
+GET    /products/{productID}                      # Get product details  
+GET    /products/categories                       # List all product categories  
+GET    /products/categories/{category}            # List products in a category  
+POST   /products/{productID}/add                  # Add product to customer's cart  
+POST   /products/filtered                         # Get products matching filter
 ```
 ![img_8.png](img_8.png)
 
