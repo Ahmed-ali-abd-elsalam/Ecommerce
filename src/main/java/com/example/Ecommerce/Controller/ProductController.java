@@ -28,7 +28,7 @@ public class ProductController {
 
 //    return pages of products
 //    make a sperate object for the filter
-    @GetMapping(path = "/filtered")
+    @PostMapping(path = "/filtered")
     public List<ProductDto> getProductsByFilter(@RequestBody Map<String,List<String>> filters, @RequestParam String productName
             , @RequestParam int pageNumber, @RequestParam int size){
         return  productService.getProductsByFilter(filters,productName,pageNumber,size);
