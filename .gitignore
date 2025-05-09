@@ -4,7 +4,8 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-secret.env
+src/main/resources/secret.env
+
 
 ### STS ###
 .apt_generated
@@ -20,6 +21,8 @@ secret.env
 *.iws
 *.iml
 *.ipr
+*.env
+
 
 ### NetBeans ###
 /nbproject/private/

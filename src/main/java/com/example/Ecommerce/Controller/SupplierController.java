@@ -4,6 +4,7 @@ import com.example.Ecommerce.DTOS.ProductDto;
 import com.example.Ecommerce.DTOS.ProductRequestDto;
 import com.example.Ecommerce.DTOS.SupplierRequestDto;
 import com.example.Ecommerce.DTOS.SupplierResponseDto;
+import com.example.Ecommerce.Models.auth.AuthenticationResponse;
 import com.example.Ecommerce.Service.SupplierService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -21,7 +22,7 @@ public class SupplierController {
     }
 
     @PutMapping
-    private  String  editSupplierInfo(Authentication authentication, @RequestBody SupplierRequestDto supplier){
+    private AuthenticationResponse editSupplierInfo(Authentication authentication, @RequestBody SupplierRequestDto supplier){
         return supplierService.editSupplierInfo(authentication,supplier);
     }
 

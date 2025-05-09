@@ -12,11 +12,19 @@ import java.util.List;
 public class OrderMapper {
     public static OrderDto OrderToDtoMapper(Order order){
         List<OrderProducts> orderProductsList = order.getOrderproducts();
-        List<ProductDto> productDtos =orderProductsList.stream().map(orderProducts -> {
+        List<ProductDto> productDtos = orderProductsList.stream().map(orderProducts -> {
             Product product = orderProducts.getProduct();
-            product.setQuantity(orderProducts.getQuantity());
-            product.setPrice(orderProducts.getPrice());
-            return  ProductMapper.MapToDto(product);
+            return  new ProductDto(product.getId(),
+                    product.getName(),
+                    product.getDescription(),
+                    product.getCategory(),
+                    product.getSubCategory(),
+                    product.getBrand(),
+                    orderProducts.getPrice(),
+                    orderProducts.getQuantity(),
+                    product.getImageUrl(),
+                    product.getSupplier().getUsername(),
+                    product.getSupplier().getID());
         }).toList();
         return new OrderDto(order.getId(),
                 order.getOrderDate(),

@@ -2,11 +2,9 @@ package com.example.Ecommerce.Service;
 
 import com.example.Ecommerce.DTOS.ProductDto;
 import com.example.Ecommerce.Mappers.ProductMapper;
-import com.example.Ecommerce.Models.Cart;
-import com.example.Ecommerce.Models.CartProducts;
-import com.example.Ecommerce.Models.Customer;
-import com.example.Ecommerce.Models.Product;
+import com.example.Ecommerce.Models.*;
 import com.example.Ecommerce.Repository.CartProductsRepository;
+import com.example.Ecommerce.Repository.CartRepository;
 import com.example.Ecommerce.Repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -25,12 +23,13 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CustomerService customerService;
     private final CartProductsRepository cartProductsRepository;
+    private final CartRepository cartRepository;
 
-    @Transactional
     public void editStock(long productID,int amount){
         Product product = productRepository.findById(productID)
                 .orElseThrow(() -> new NoSuchElementException("product with ID"+productID+"Doesn't Exist"));
         product.setQuantity(product.getQuantity()-amount);
+        productRepository.save(product);
     }
 
     public List<String> getProductsCategories() {
@@ -39,6 +38,7 @@ public class ProductService {
 
     public List<ProductDto> getProductsByCategory(String category, int pageNumber, int size) {
         List<Product> products =  productRepository.findByCategory(category, PageRequest.of(pageNumber,size));
+        if(products.isEmpty()) throw new NoSuchElementException();
         return products.stream().map(product -> ProductMapper.MapToDto(product) ).toList();
     }
 
@@ -82,6 +82,7 @@ public class ProductService {
 
     public List<ProductDto> getProductsByFilter(Map<String,List<String>>filter,String productName, int pageNumber, int size) {
         List<Product> products = productRepository.findByNameContaining(productName,PageRequest.of(pageNumber,size));
+        System.out.println(productName+" "+products.size());
         products = filterCategories(products,filter.get("categories"));
         products = filterSubCategories(products,filter.get("subCategories"));
         products = filterBrand(products,filter.get("brands"));
@@ -96,18 +97,23 @@ public class ProductService {
     }
 
 
-
+    @Transactional
     public String addProductToCart(Long productID, int quantity, Authentication authentication) {
         Customer customer = customerService.returnCustomer(authentication);
         Cart cart = customer.getCart();
         Product product = productRepository.findById(productID)
                 .orElseThrow(()->new NoSuchElementException("element with id "+productID+" Doesn't exist"));
+        CartProductsKey key = new CartProductsKey(cart.getId(), productID);
         CartProducts cartProducts = CartProducts.builder()
+                .Id(key)
                 .cart(cart)
                 .product(product)
                 .quantity(quantity)
                 .price(product.getPrice()*quantity)
                 .build();
+        cart.setTotalAmount(cart.getTotalAmount()+cartProducts.getQuantity());
+        cart.setTotalPrice(cart.getTotalPrice()+cartProducts.getPrice());
+        cartRepository.save(cart);
         cartProductsRepository.save(cartProducts);
         return  "Product added";
     }

@@ -5,6 +5,7 @@ import com.example.Ecommerce.DTOS.CustomerResponseDto;
 import com.example.Ecommerce.Models.Customer;
 
 public class CustomerMapper {
+
     public static CustomerResponseDto MapToResponseDto(Customer customer){
         return new CustomerResponseDto(
                 customer.getFirstName(),
@@ -16,8 +17,8 @@ public class CustomerMapper {
                 customer.getDateOfBirth(),
                 customer.getRole(),
                 customer.getMoney(),
-                customer.getCart(),
-                customer.getOrders()
+                CartMapper.CartToDtoMapper(customer.getCart()),
+                customer.getOrders().stream().map(order -> OrderMapper.OrderToDtoMapper(order)).toList()
                 );
     }
     public static Customer MapToCustomer(CustomerRequestDto customerRequestDto){
@@ -30,10 +31,7 @@ public class CustomerMapper {
                 .phoneNumber(customerRequestDto.phoneNumber())
                 .address(customerRequestDto.address())
                 .dateOfBirth(customerRequestDto.dateOfBirth())
-                .role(customerRequestDto.role())
                 .money(customerRequestDto.money())
-                .cart(CartMapper.DtoToCartMapper(customerRequestDto.cart()))
-                .orders(customerRequestDto.orders())
                 .build();
     }
 }

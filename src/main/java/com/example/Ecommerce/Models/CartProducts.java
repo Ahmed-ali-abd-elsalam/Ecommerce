@@ -3,6 +3,7 @@ package com.example.Ecommerce.Models;
 import jakarta.persistence.*;
 import lombok.*;
 
+@EqualsAndHashCode
 @Builder
 @Data
 @AllArgsConstructor
@@ -13,14 +14,13 @@ public class CartProducts {
     CartProductsKey Id;
 
     @ManyToOne
-            @MapsId("cartId")
-            @JoinColumn(name = "Cart_Id")
+    @JoinColumn(name = "cart_id")
+    @MapsId("cartId")
     Cart cart;
 
     @ManyToOne
-            @MapsId("productId")
-            @JoinColumn(name = "Product_Id")
-
+    @JoinColumn(name = "product_id")
+    @MapsId("productId")
     Product product;
 
     @Column(nullable = false)

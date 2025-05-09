@@ -1,11 +1,13 @@
 package com.example.Ecommerce.Models;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
 
+@EqualsAndHashCode
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,6 +35,7 @@ public class Cart {
     List<CartProducts> cartProducts;
 
     @OneToOne(mappedBy = "cart")
+    @JsonBackReference
     private Customer customer;
 
 

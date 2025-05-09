@@ -1,7 +1,5 @@
 package com.example.Ecommerce.DTOS;
 
-import com.example.Ecommerce.Models.Cart;
-import com.example.Ecommerce.Models.Order;
 import com.example.Ecommerce.Models.Role;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -30,8 +28,8 @@ public record CustomerResponseDto(
         Role role,
         @PositiveOrZero
         Double money,
-        Cart cart,
-        List<Order> orders
+        CartDto cart,
+        List<OrderDto> orders
 
 ) {
 }

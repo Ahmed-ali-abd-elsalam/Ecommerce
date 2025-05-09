@@ -4,9 +4,9 @@ package com.example.Ecommerce.Service;
 import com.example.Ecommerce.DTOS.OrderDto;
 import com.example.Ecommerce.Mappers.OrderMapper;
 import com.example.Ecommerce.Models.*;
-import com.example.Ecommerce.Repository.CustomerRepository;
 import com.example.Ecommerce.Repository.OrderProductsRepository;
 import com.example.Ecommerce.Repository.OrderRepository;
+import com.example.Ecommerce.Repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -20,14 +20,15 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class OrderService {
 
-    private final CustomerRepository customerRepository;
     private final CustomerService customerService;
     private final OrderRepository orderRepository;
     private final OrderProductsRepository orderProductsRepository;
 
-    public OrderDto SaveOrder(Long customerId, Cart cart, String paymentMethod) {
-        Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new NoSuchElementException("no customer with id"+customerId));
+
+
+    public OrderDto SaveOrder(Customer customer, Cart cart, String paymentMethod) {
         List<OrderProducts> orderProductsList = new ArrayList<>();
+        List<CartProducts> cartProductsList = cart.getCartProducts();
         Order order = Order.builder()
                 .orderDate(LocalDate.now())
                 .customer(customer)
@@ -35,15 +36,18 @@ public class OrderService {
                 .totalAmount(cart.getTotalAmount())
                 .paymentMethod(paymentMethod)
                 .build();
-        cart.getCartProducts().forEach(cartProducts -> {
+        for (int i = 0; i < cartProductsList.size(); i++) {
+            CartProducts cartProducts = cartProductsList.get(i);
+            OrderProductsKey key = new OrderProductsKey(order.getId(),cartProducts.getProduct().getId());
             OrderProducts orderProducts = OrderProducts.builder()
-                    .order(order)
+                    .Id(key)
                     .product(cartProducts.getProduct())
+                    .order(order)
                     .price(cartProducts.getPrice())
                     .quantity(cartProducts.getQuantity())
                     .build();
             orderProductsList.add(orderProducts);
-        });
+        }
         order.setOrderproducts(orderProductsList);
         orderRepository.save(order);
         orderProductsRepository.saveAll(orderProductsList);

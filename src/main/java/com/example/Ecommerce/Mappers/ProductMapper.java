@@ -15,7 +15,6 @@ public class ProductMapper {
                 .price(productDto.price())
                 .quantity(productDto.quantity())
                 .imageUrl(productDto.imageUrl())
-                .supplier(productDto.supplier())
                 .build();
     }
     public static ProductDto MapToDto(Product product){
@@ -29,7 +28,9 @@ public class ProductMapper {
                 product.getPrice(),
                 product.getQuantity(),
                 product.getImageUrl(),
-                product.getSupplier());
+                product.getSupplier().getUsername(),
+                product.getSupplier().getID());
+//                SupplierMapper.MapToResponseDto(product.getSupplier()));
     }
     public static Product MapDtoToProduct(ProductDto productDto){
         return Product.builder()
@@ -42,7 +43,8 @@ public class ProductMapper {
                 .price(productDto.price())
                 .quantity(productDto.quantity())
                 .imageUrl(productDto.imageUrl())
-                .supplier(productDto.supplier())
+
+//                .supplier(SupplierMapper.MapToSupplier(productDto.supplier()))
                 .build();
     }
 }

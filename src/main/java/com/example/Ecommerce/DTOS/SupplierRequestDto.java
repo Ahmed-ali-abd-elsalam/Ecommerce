@@ -1,15 +1,10 @@
 package com.example.Ecommerce.DTOS;
 
 
-import com.example.Ecommerce.Models.Role;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Valid
 public record SupplierRequestDto(
@@ -28,9 +23,8 @@ public record SupplierRequestDto(
         String address,
         @Past
         LocalDate dateOfBirth,
-        Role role,
         @PositiveOrZero
-        Double rating,
-        List<ProductDto> productDtos
+                @DecimalMax(value = "5.0")
+        Double rating
 ) {
 }

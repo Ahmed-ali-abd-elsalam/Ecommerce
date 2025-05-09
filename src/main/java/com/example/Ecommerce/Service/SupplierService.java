@@ -9,6 +9,7 @@ import com.example.Ecommerce.Mappers.ProductMapper;
 import com.example.Ecommerce.Mappers.SupplierMapper;
 import com.example.Ecommerce.Models.Product;
 import com.example.Ecommerce.Models.Supplier;
+import com.example.Ecommerce.Models.auth.AuthenticationResponse;
 import com.example.Ecommerce.Repository.ProductRepository;
 import com.example.Ecommerce.Repository.SupplierRepository;
 
@@ -16,6 +17,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +29,8 @@ public class SupplierService {
 
     private final SupplierRepository supplierRepository;
     private final ProductRepository productRepository;
+    private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
 
     public Supplier returnCurrentSupplier(Authentication authentication){
         return supplierRepository.findByEmail(authentication.getName()).orElseThrow(()->new UsernameNotFoundException("this Supplier "+authentication.getName() +" not in  database"));
@@ -37,17 +41,19 @@ public class SupplierService {
     }
 
     @Transactional
-    public String  editSupplierInfo(Authentication authentication, SupplierRequestDto supplierRequestDto) {
+    public AuthenticationResponse editSupplierInfo(Authentication authentication, SupplierRequestDto supplierRequestDto) {
         Supplier supplier1 = returnCurrentSupplier(authentication);
-        Supplier supplier = SupplierMapper.MapToSupplier(supplierRequestDto);
-        supplier1.setFirstName(supplier.getFirstName());
-        supplier1.setLastName(supplier.getLastName());
-        supplier1.setUserName(supplier.getUsername());
-        supplier1.setEmail(supplier.getEmail());
-        supplier1.setPhoneNumber(supplier.getPhoneNumber());
-        supplier1.setAddress(supplier.getPhoneNumber());
-        supplier1.setRating(supplier.getRating());
-        return "Done";
+//        Supplier supplier = SupplierMapper.MapToSupplier(supplierRequestDto);
+        supplier1.setFirstName(supplierRequestDto.firstName());
+        supplier1.setLastName(supplierRequestDto.lastName());
+        supplier1.setUserName(supplierRequestDto.userName());
+        supplier1.setEmail(supplierRequestDto.email());
+        supplier1.setPassword(passwordEncoder.encode(supplierRequestDto.password()));
+        supplier1.setPhoneNumber(supplierRequestDto.phoneNumber());
+        supplier1.setAddress(supplierRequestDto.address());
+        supplier1.setRating(supplierRequestDto.rating());
+        String jwt = jwtService.generateToken(supplier1);
+        return AuthenticationResponse.builder().JWTtoken(jwt).build();
     }
 
     @Transactional
@@ -61,6 +67,7 @@ public class SupplierService {
                     _product.getSubCategory().equals(productRequestDto.subCategory())){
                 editProductInfo(authentication,_product.getId(),productRequestDto);
                 Product product = ProductMapper.MapRequestToProduct(productRequestDto);
+                product.setSupplier(supplier);
                 return ProductMapper.MapToDto(product);
             }
         }
@@ -69,7 +76,6 @@ public class SupplierService {
         productRepository.save(product);
         return ProductMapper.MapToDto(product);
     }
-
     @Transactional
     public String editProductInfo(Authentication authentication, Long productID, ProductRequestDto product) {
         Supplier supplier = returnCurrentSupplier(authentication);

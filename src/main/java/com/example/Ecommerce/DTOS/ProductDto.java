@@ -1,6 +1,6 @@
 package com.example.Ecommerce.DTOS;
 
-import com.example.Ecommerce.Models.Supplier;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -26,7 +26,7 @@ public record ProductDto(
                 message = "Invalid URL format"
         )
         String imageUrl,
-        @Valid
-        Supplier supplier
+        String SupplierName,
+        Long SupplierID
 ) {
 }

@@ -3,15 +3,15 @@ package com.example.Ecommerce.Controller;
 import com.example.Ecommerce.DTOS.CartDto;
 import com.example.Ecommerce.DTOS.OrderDto;
 import com.example.Ecommerce.DTOS.ProductDto;
-import com.example.Ecommerce.Models.Order;
 
 
 import com.example.Ecommerce.Service.CartService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/Cart")
@@ -26,12 +26,12 @@ public class CartController {
     }
 
     @PutMapping(path = "/{CartID}")
-    public CartDto editCartItems(Authentication authentication, @PathVariable Long CartID, Map<Long, ProductDto> productMap){
+    public CartDto editCartItems(Authentication authentication, @PathVariable Long CartID,@Valid @RequestBody List<ProductDto> productMap){
         return cartService.editCartItems(authentication,CartID,productMap);
     }
 
-    @PostMapping(path = "/{CartID}/Finalize")
-    public OrderDto finalizePurchase(Authentication authentication, @PathVariable Long CartID, String paymentMethod){
+    @PostMapping(path = "/Finalize/{CartID}")
+    public OrderDto finalizePurchase(Authentication authentication, @PathVariable Long CartID,@RequestBody String paymentMethod){
         return cartService.finalizePurchase(authentication,CartID,paymentMethod);
     }
 }
